@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyStateController : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class EnemyStateController : MonoBehaviour
 
     public GameObject player;
 
-    Vector3 lastSeenPlayerPosition;
+    Vector3 lastSeenPlayerPosition, directionToPlayer;
     float distance;
     int state = 0; // 0 idle, 1 searching, 2 chasing
     public float suspicion = 0;
@@ -22,6 +23,8 @@ public class EnemyStateController : MonoBehaviour
     public float chasingPatience = 10; // time spent chasing
     public float sightDistance = 25f;
     public string playerColliderName;
+    public float viewAngle = 180;
+    public string sceneToLoad = "EnemyTestScene";
 
     void Start()
     {
@@ -31,10 +34,17 @@ public class EnemyStateController : MonoBehaviour
 
     void Update()
     {
+        Debug.DrawLine(transform.position, transform.position + transform.forward * 5f, Color.green);
+        Debug.DrawLine(transform.position, player.transform.position, Color.red);
+
+
         distance = Vector3.Distance(transform.position, player.transform.position);
 
+        directionToPlayer = (player.transform.position - transform.position).normalized;
+        float dot = Vector3.Dot(transform.forward, directionToPlayer);
+
         Debug.DrawRay(transform.position, (player.transform.position - transform.position).normalized * sightDistance, Color.red);
-        if (distance <= sightDistance && Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, sightDistance))
+        if (dot > Mathf.Cos((viewAngle / 2) * Mathf.Deg2Rad) && distance <= sightDistance && Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, sightDistance))
         {
             if (hit.collider.name == playerColliderName)
             {
@@ -72,7 +82,14 @@ public class EnemyStateController : MonoBehaviour
 
         if (seesPlayer)
         {
-            suspicion += Time.deltaTime;
+            if (player.GetComponent<PlayerController>().crouching)
+            {
+                suspicion += Time.deltaTime / 3;
+            }
+            else
+            {
+                suspicion += Time.deltaTime;
+            }
             lastSeenPlayerPosition = player.transform.position;
         }
         else if (suspicion > 0)
@@ -83,6 +100,15 @@ public class EnemyStateController : MonoBehaviour
         if (suspicion >= requiredSuspicion)
         {
             state = 2;
+        }
+    }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Hit the player");
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 }
