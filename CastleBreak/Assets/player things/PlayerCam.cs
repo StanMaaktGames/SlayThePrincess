@@ -8,14 +8,17 @@ public class PlayerController : MonoBehaviour
     public Transform cameraTransform, playerModel;
     public float mouseSensitivity = 2f;
     public float moveSpeed = 6f;
+    public float crouchSpeed = 3f;
     public float gravity = -9.81f;
     public float cameraDistance = 4f;
     public float cameraHeight = 2f;
 
+    public bool crouching = false;
     private CharacterController controller;
     private Vector3 velocity, moveVelocity, lastPosition;
     private float moveVelocityFloat;
     Animator animator;
+    private Vector3 playerModelDefaultScale;
 
     private float yaw = 0f;
     private float pitch = 15f;
@@ -25,6 +28,7 @@ public class PlayerController : MonoBehaviour
         controller = GetComponent<CharacterController>();
         Cursor.lockState = CursorLockMode.Locked;
         animator = GetComponentInChildren<Animator>();
+        playerModelDefaultScale = playerModel.transform.localScale;
     }
 
     void Update()
@@ -49,6 +53,8 @@ public class PlayerController : MonoBehaviour
 
     void HandleMovement()
     {
+        crouching = Input.GetKey(KeyCode.C) || Input.GetKey(KeyCode.LeftShift);
+
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
         camForward.y = 0;
@@ -60,7 +66,16 @@ public class PlayerController : MonoBehaviour
         float moveZ = Input.GetAxis("Vertical");
 
         Vector3 move = camRight * moveX + camForward * moveZ;
-        controller.Move(move * moveSpeed * Time.deltaTime);
+        if (crouching)
+        {
+            playerModel.transform.localScale = new Vector3(playerModelDefaultScale.x, playerModelDefaultScale.y * 0.5f, playerModelDefaultScale.z);
+            controller.Move(move * crouchSpeed * Time.deltaTime);
+        }
+        else
+        {
+            playerModel.transform.localScale = playerModelDefaultScale;
+            controller.Move(move * moveSpeed * Time.deltaTime);
+        }
 
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = -2f;
