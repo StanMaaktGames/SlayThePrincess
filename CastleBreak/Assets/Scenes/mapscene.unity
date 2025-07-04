@@ -570,8 +570,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a4f1e70547d0e74ba0483aeb979f976, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  timer: 5
-  videoScene: video scene
+  timer: 300
+  nextScene: video scene
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
