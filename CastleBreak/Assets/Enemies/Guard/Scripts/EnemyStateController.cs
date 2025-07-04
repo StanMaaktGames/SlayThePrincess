@@ -21,6 +21,7 @@ public class EnemyStateController : MonoBehaviour
     public float searchPatience = 10; // time spent searching
     public float chasingPatience = 10; // time spent chasing
     public float sightDistance = 25f;
+    public string playerColliderName;
 
     void Start()
     {
@@ -32,10 +33,14 @@ public class EnemyStateController : MonoBehaviour
     {
         distance = Vector3.Distance(transform.position, player.transform.position);
 
+        Debug.DrawRay(transform.position, (player.transform.position - transform.position).normalized * sightDistance, Color.red);
         if (distance <= sightDistance && Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, sightDistance))
         {
-            seesPlayer = true;
-            lastSeenPlayerPosition = player.transform.position;
+            if (hit.collider.name == playerColliderName)
+            {
+                seesPlayer = true;
+                lastSeenPlayerPosition = player.transform.position;
+            }
         }
         else
         {
@@ -44,7 +49,10 @@ public class EnemyStateController : MonoBehaviour
 
         if (state == 2)
         {
-            // chase
+            if (seesPlayer)
+            {
+                lastSeenPlayerPosition = player.transform.position;
+            }
             GetComponent<EnemyMovement>().Chase(lastSeenPlayerPosition);
         }
         // else if (state == 1)
@@ -67,7 +75,7 @@ public class EnemyStateController : MonoBehaviour
             suspicion += Time.deltaTime;
             lastSeenPlayerPosition = player.transform.position;
         }
-        else
+        else if (suspicion > 0)
         {
             suspicion -= Time.deltaTime;
         }
