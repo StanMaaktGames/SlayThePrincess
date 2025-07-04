@@ -343,30 +343,6 @@ PrefabInstance:
       propertyPath: m_Name
       value: player Variant
       objectReference: {fileID: 0}
-    - target: {fileID: 3250525062743069470, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 4671222573945989346, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5129718030430500785, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 5423577427835156997, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6341160992381541488, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
-    - target: {fileID: 6564174713312439597, guid: 22fbf7077d5e97047b4789a23a5400d2, type: 3}
-      propertyPath: m_Layer
-      value: 7
-      objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
@@ -441,7 +417,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 628985898}
   speed: 1.5
-  sprintSpeed: 15
+  sprintSpeed: 10
   requiredInterest: 1
   path:
   - {fileID: 619516264}

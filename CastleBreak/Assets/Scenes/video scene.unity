@@ -639,7 +639,7 @@ VideoPlayer:
   - {fileID: 0}
   m_DirectAudioVolumes:
   - 1
-  m_Url: file://C:/Users/Lucas/Downloads/0001-0100.avi
+  m_Url: file://C:/Users/Lucas/OneDrive - Montessori Scholengemeenschap Amsterdam/Documents/slaytheprincess/SlayThePrincess/CastleBreak/Assets/video/0001-0100.avi
   m_EnabledAudioTracks: 01
   m_DirectAudioMutes: 00
   m_ControlledAudioTrackCount: 1
