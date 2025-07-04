@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(CharacterController))]
 public class PlayerController : MonoBehaviour
 {
     public Transform cameraTransform;
@@ -15,7 +16,7 @@ public class PlayerController : MonoBehaviour
     private Vector3 velocity;
 
     private float yaw = 0f;
-    private float pitch = 15f; // slight downward angle
+    private float pitch = 15f;
 
     void Start()
     {
@@ -37,12 +38,11 @@ public class PlayerController : MonoBehaviour
 
         yaw += mouseX;
         pitch -= mouseY;
-        pitch = Mathf.Clamp(pitch, -30f, 60f); // limit vertical angle
+        pitch = Mathf.Clamp(pitch, -30f, 60f); // vertical limits
     }
 
     void HandleMovement()
     {
-        // Move relative to camera direction
         Vector3 camForward = cameraTransform.forward;
         Vector3 camRight = cameraTransform.right;
         camForward.y = 0;
@@ -52,12 +52,10 @@ public class PlayerController : MonoBehaviour
 
         float moveX = Input.GetAxis("Horizontal");
         float moveZ = Input.GetAxis("Vertical");
-        Debug.Log(Input.GetAxis("Horizontal"));
 
         Vector3 move = camRight * moveX + camForward * moveZ;
         controller.Move(move * moveSpeed * Time.deltaTime);
 
-        // Gravity
         if (controller.isGrounded && velocity.y < 0)
             velocity.y = -2f;
 
@@ -67,10 +65,23 @@ public class PlayerController : MonoBehaviour
 
     void UpdateCameraPosition()
     {
-        // Orbit around player
         Quaternion rotation = Quaternion.Euler(pitch, yaw, 0);
-        Vector3 offset = rotation * new Vector3(0, 0, -cameraDistance);
-        cameraTransform.position = transform.position + offset + Vector3.up * cameraHeight;
+
+        Vector3 desiredOffset = rotation * new Vector3(0, 0, -cameraDistance);
+        Vector3 targetPosition = transform.position + Vector3.up * cameraHeight;
+        Vector3 desiredCameraPos = targetPosition + desiredOffset;
+
+        RaycastHit hit;
+        float adjustedDistance = cameraDistance;
+
+        if (Physics.SphereCast(targetPosition, 0.3f, desiredOffset.normalized, out hit, cameraDistance))
+        {
+            adjustedDistance = hit.distance - 0.1f;
+            adjustedDistance = Mathf.Clamp(adjustedDistance, 0.5f, cameraDistance);
+        }
+
+        Vector3 finalOffset = desiredOffset.normalized * adjustedDistance;
+        cameraTransform.position = targetPosition + finalOffset;
         cameraTransform.rotation = rotation;
     }
 }
