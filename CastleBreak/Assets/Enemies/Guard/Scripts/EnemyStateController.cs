@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class EnemyStateController : MonoBehaviour
 {
@@ -23,6 +24,7 @@ public class EnemyStateController : MonoBehaviour
     public float sightDistance = 25f;
     public string playerColliderName;
     public float viewAngle = 180;
+    public string sceneToLoad = "EnemyTestScene";
 
     void Start()
     {
@@ -42,7 +44,7 @@ public class EnemyStateController : MonoBehaviour
         float dot = Vector3.Dot(transform.forward, directionToPlayer);
 
         Debug.DrawRay(transform.position, (player.transform.position - transform.position).normalized * sightDistance, Color.red);
-        if (dot > Mathf.Cos((viewAngle/2) * Mathf.Deg2Rad) && distance <= sightDistance && Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, sightDistance))
+        if (dot > Mathf.Cos((viewAngle / 2) * Mathf.Deg2Rad) && distance <= sightDistance && Physics.Raycast(transform.position, (player.transform.position - transform.position), out hit, sightDistance))
         {
             if (hit.collider.name == playerColliderName)
             {
@@ -98,6 +100,15 @@ public class EnemyStateController : MonoBehaviour
         if (suspicion >= requiredSuspicion)
         {
             state = 2;
+        }
+    }
+    
+    void OnCollisionEnter(Collision collision)
+    {
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            Debug.Log("Hit the player");
+            SceneManager.LoadScene(sceneToLoad);
         }
     }
 }
