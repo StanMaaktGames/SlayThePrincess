@@ -425,7 +425,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   newGameScene: 
-  startGameScene: 
+  startGameScene: mapscene
 --- !u!1 &1855346159
 GameObject:
   m_ObjectHideFlags: 0
