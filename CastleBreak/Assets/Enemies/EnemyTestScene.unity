@@ -456,7 +456,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   agent: {fileID: 628985898}
   speed: 1.5
-  sprintSpeed: 15
+  sprintSpeed: 10
   requiredInterest: 1
   path:
   - {fileID: 619516264}
